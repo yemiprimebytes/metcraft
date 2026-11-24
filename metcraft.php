@@ -19,9 +19,8 @@ define( 'METCRAFT_VERSION', get_file_data( METCRAFT_PLUGIN_FILE, [ 'version' => 
 define( 'METCRAFT_FREE_PATH', plugin_dir_path( METCRAFT_PLUGIN_FILE ));
 define( 'METCRAFT_FREE_URL', plugin_dir_url( METCRAFT_PLUGIN_FILE ));
 
-// Tells MetCraft Pro that this version fires the hooks for the features
-// that moved to Pro, so Pro runs them. Older free versions run them inline.
-define( 'METCRAFT_PRO_FEATURE_HOOKS', 1 );
+// All features are included in this single plugin.
+define( 'METCRAFT_ALL_FEATURES', 1 );
 
 require plugin_dir_path( METCRAFT_PLUGIN_FILE ) . 'autoloader.php';
 require plugin_dir_path( METCRAFT_PLUGIN_FILE ) . 'plugin.php';

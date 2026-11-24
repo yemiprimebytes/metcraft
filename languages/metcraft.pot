@@ -397,9 +397,6 @@ msgstr ""
 msgid "Public Roadmap"
 msgstr ""
 
-msgid "Go Premium"
-msgstr ""
-
 msgid "Minimum length should be "
 msgstr ""
 

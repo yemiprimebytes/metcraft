@@ -7,57 +7,12 @@ Class Manifest{
 
 	public function init() {
 		add_action( 'elementor/elements/categories_registered', [ $this, 'add_metcraft_widget_categories' ]);
-        add_filter('elementor/editor/localize_settings', [$this, 'promote_pro_widgets'], 1000);
 		add_action( 'elementor/widgets/register', [ $this, 'register_widgets' ] );
 	}
 
 	/**
-	 * Promote Pro Widgets
+	 * Get input widgets
 	 */
-	public function promote_pro_widgets( $settings ) {
-
-		if( 'metcraft-form' != get_post_type() || class_exists( '\MetCraft_Pro\Base\Package' ) ) {
-			return $settings;
-		}
-
-		if(isset($settings['promotionWidgets']) && is_array($settings['promotionWidgets'])) {
-			$promotion_widgets = $settings['promotionWidgets'];
-		} else {
-			$promotion_widgets = [];
-		}
-
-		$merged_metcraft_promotion_widgets = array_merge( $promotion_widgets, [
-			[
-				'name'       => 'mcf-calculation',
-				'title'      => esc_html__( 'Calculation', 'metcraft' ),
-				'icon'       => 'icon-metcraft_calculation_field',
-				'categories' => '["metcraft"]',
-			],
-			[
-				'name'	   => 'mcf-next-step',
-				'title'      => esc_html__( 'Next Step', 'metcraft' ),
-				'icon'       => 'icon-metcraft_next_step',
-				'categories' => '["metcraft"]',
-			],
-			[
-				'name'	   => 'mcf-prev-step',
-				'title'      => esc_html__( 'Prev Step', 'metcraft' ),
-				'icon'       => 'icon-metcraft_previous_step',
-				'categories' => '["metcraft"]',
-			],
-			[
-				'name'       => 'mcf-simple-repeater',
-				'title'      => esc_html__( 'Simple Repeater', 'metcraft' ),
-				'icon'       => 'icon-metcraft_simple_repeater',
-				'categories' => '["metcraft"]',
-			],
-		]);
-
-		$settings['promotionWidgets'] = $merged_metcraft_promotion_widgets;
-
-		return $settings;
-	}
-
 	public function get_input_widgets(){
 		$widget_list = [
 			'mcf-text',

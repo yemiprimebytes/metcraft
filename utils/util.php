@@ -27,6 +27,35 @@ class Util {
 		$settings  = $form_data['settings'] ?? [];
 		$widget_id = $widget_id ?: uniqid( 'mcf-' );
 
+		// Required login check
+		if ( ! \MetCraft\Core\Required_Login\Checker::can_access( $settings ) ) {
+			echo '<div class="mcf-required-login">' . esc_html( \MetCraft\Core\Required_Login\Checker::get_message( $settings ) ) . '<br>';
+			echo '<a href="' . esc_url( \MetCraft\Core\Required_Login\Checker::get_login_url() ) . '" class="mcf-button-primary">' . esc_html__( 'Login', 'metcraft' ) . '</a></div>';
+			return;
+		}
+
+		// Submission rules check
+		$rules_check = \MetCraft\Core\Submission_Rules\Engine::can_submit( $settings );
+		if ( ! $rules_check['allowed'] ) {
+			echo '<div class="mcf-rules-blocked">' . esc_html( $rules_check['message'] ) . '</div>';
+			return;
+		}
+
+		// Limit entries check
+		$limit_check = \MetCraft\Core\Limit_Entries\Limiter::can_submit( $form_id, $settings );
+		if ( ! $limit_check['allowed'] ) {
+			echo '<div class="mcf-limit-blocked">' . esc_html( $limit_check['message'] ) . '</div>';
+			return;
+		}
+
+		// Hide form after submission (check via a submitted entry cookie/session)
+		$hide_form = \MetCraft\Core\Hide_Form\Controller::should_hide( $settings );
+		$hide_key  = 'metcraft_hidden_form_' . $form_id;
+		if ( $hide_form && isset( $_COOKIE[ $hide_key ] ) ) {
+			echo '<div class="mcf-form-hidden">' . esc_html( \MetCraft\Core\Hide_Form\Controller::get_hidden_message( $settings ) ) . '</div>';
+			return;
+		}
+
 		// Check schedule
 		$schedule_start = isset( $settings['schedule_start'] ) ? $settings['schedule_start'] : '';
 		$schedule_end   = isset( $settings['schedule_end'] ) ? $settings['schedule_end'] : '';
@@ -130,13 +159,50 @@ class Util {
 	 *
 	 * @param array $fields Fields array.
 	 */
-	private static function render_fields( $fields ) {
+	private static function render_fields( $fields, $submitted_values = [] ) {
 		if ( empty( $fields ) || ! is_array( $fields ) ) {
 			return;
 		}
 
+		// Apply conditional logic filtering
+		$fields = \MetCraft\Core\Conditional_Logic\Engine::filter_visible_fields( $fields, $submitted_values );
+
+		// Multi-step: group fields by step
+		$is_multi_step = false;
 		foreach ( $fields as $field ) {
-			$type = $field['type'] ?? 'text';
+			if ( ! empty( $field['step'] ) && absint( $field['step'] ) > 1 ) {
+				$is_multi_step = true;
+				break;
+			}
+		}
+
+		if ( $is_multi_step ) {
+			$steps = \MetCraft\Core\Multi_Step\Handler::group_fields_by_step( $fields );
+			$step_count = count( $steps );
+			$step_index = 1;
+			foreach ( $steps as $step_num => $step_fields ) {
+				$active_class = ( $step_num == 1 ) ? ' mcf-step-active' : '';
+				echo '<div class="mcf-step' . esc_attr( $active_class ) . '" data-step="' . esc_attr( $step_num ) . '">';
+				echo '<div class="mcf-step-header">' . esc_html__( 'Step', 'metcraft' ) . ' ' . esc_html( $step_index ) . ' of ' . esc_html( $step_count ) . '</div>';
+				foreach ( $step_fields as $field ) {
+					self::render_single_field( $field );
+				}
+				echo '</div>';
+				$step_index++;
+			}
+			// Step navigation
+			echo '<div class="mcf-step-nav">';
+			echo '<button type="button" class="mcf-step-btn mcf-step-prev" disabled>' . esc_html__( 'Previous', 'metcraft' ) . '</button>';
+			echo '<button type="button" class="mcf-step-btn mcf-step-next">' . esc_html__( 'Next', 'metcraft' ) . '</button>';
+			echo '</div>';
+		} else {
+			foreach ( $fields as $field ) {
+				self::render_single_field( $field );
+			}
+		}
+	}
+
+	private static function render_single_field( $field ) {
 			$key  = $field['key'] ?? '';
 			$label = $field['label'] ?? '';
 
@@ -224,6 +290,30 @@ class Util {
 					break;
 				case 'recaptcha':
 					echo \MetCraft\Core\Integrations\Google_Recaptcha::get_html( 0, $key );
+					break;
+				case 'calculation':
+					$expression = $field['expression'] ?? '';
+					$default    = $field['default_value'] ?? 0;
+					echo '<div class="mcf-field-wrapper mcf-field-calculation" id="mcf-field-' . esc_attr( $key ) . '">';
+					echo '<label class="mcf-field-label">' . esc_html( $label );
+					if ( ! empty( $field['required'] ) ) { echo ' <span class="mcf-field-required">*</span>'; }
+					echo '</label>';
+					echo '<input type="text" name="' . esc_attr( $key ) . '" id="' . esc_attr( $key ) . '" value="' . esc_attr( $default ) . '" class="mcf-field-input mcf-calculation-field" data-expression="' . esc_attr( $expression ) . '" readonly />';
+					echo '</div>';
+					break;
+				case 'quiz':
+					$points = absint( $field['points'] ?? 0 );
+					$options = isset( $field['options'] ) ? $field['options'] : [];
+					echo '<div class="mcf-field-wrapper mcf-field-quiz" id="mcf-field-' . esc_attr( $key ) . '">';
+					echo '<label class="mcf-field-label">' . esc_html( $label );
+					if ( ! empty( $field['required'] ) ) { echo ' <span class="mcf-field-required">*</span>'; }
+					echo ' <span class="mcf-quiz-points">(' . esc_html__( 'Points: ', 'metcraft' ) . $points . ')</span></label>';
+					foreach ( $options as $opt ) {
+						echo '<label class="mcf-radio-label"><input type="radio" name="' . esc_attr( $key ) . '" value="' . esc_attr( $opt['option_value'] ?? '' ) . '" class="mcf-field-radio" /> <span>' . esc_html( $opt['option_label'] ?? '' ) . '</span>';
+						if ( ! empty( $opt['is_correct'] ) ) { echo ' <span class="mcf-quiz-correct" style="display:none;">✓</span>'; }
+						echo '</label>';
+					}
+					echo '</div>';
 					break;
 			}
 
@@ -328,6 +418,17 @@ class Util {
 			}
 		}
 
+		// Compute calculation field values
+		foreach ( $fields as $field ) {
+			if ( ! empty( $field['type'] ) && $field['type'] === 'calculation' ) {
+				$key = $field['key'] ?? '';
+				$expression = $field['expression'] ?? '';
+				if ( ! empty( $key ) && ! empty( $expression ) ) {
+					$data[ $key ] = \MetCraft\Core\Calculation\Engine::evaluate( $expression, $data );
+				}
+			}
+		}
+
 		// Validate
 		$errors = \MetCraft\Core\Entries\Validation::validate_required( $data, $fields );
 		if ( ! empty( $errors ) ) {
@@ -351,9 +452,71 @@ class Util {
 			wp_send_json_error( [ 'message' => __( 'Failed to save submission', 'metcraft' ) ] );
 		}
 
+		$settings = $form['settings'] ?? [];
+
+		// Payment processing
+		if ( ! empty( $settings['payment_enabled'] ) ) {
+			$payment_result = self::process_payment( $settings, $data );
+			if ( ! $payment_result['success'] ) {
+				wp_send_json_error( [ 'message' => $payment_result['error'] ?? __( 'Payment failed.', 'metcraft' ) ] );
+			}
+			$data['_metcraft_payment'] = $payment_result;
+		}
+
 		do_action( 'metcraft_form_submitted', $form_id, $data );
 
+		// Confirmation email already sent in handle_submission
+
+		// Redirect after submission
+		$redirect_url = \MetCraft\Core\Redirect\Manager::get_url( $settings );
+		if ( \MetCraft\Core\Redirect\Manager::is_enabled( $settings ) && ! empty( $redirect_url ) ) {
+			wp_send_json_success( [
+				'message' => __( 'Form submitted successfully.', 'metcraft' ),
+				'entry_id' => $entry_id,
+				'redirect' => $redirect_url,
+			] );
+		}
+
 		wp_send_json_success( [ 'message' => __( 'Form submitted successfully.', 'metcraft' ), 'entry_id' => $entry_id ] );
+	}
+
+	/**
+	 * Process payment for a form submission.
+	 *
+	 * @param array $settings Form settings.
+	 * @param array $data Form data.
+	 * @return array
+	 */
+	private static function process_payment( $settings, $data ) {
+		$config = \MetCraft\Core\Payment\Gateway::get_config( $settings );
+
+		if ( empty( $config['enabled'] ) ) {
+			return [ 'success' => true ];
+		}
+
+		$amount_field = $config['amount_field'] ?? '';
+		$amount = 0;
+		if ( ! empty( $amount_field ) && isset( $data[ $amount_field ] ) ) {
+			$amount = floatval( $data[ $amount_field ] );
+		}
+
+		if ( $amount <= 0 ) {
+			return [ 'success' => false, 'error' => esc_html__( 'Invalid payment amount.', 'metcraft' ) ];
+		}
+
+		$gateway = $config['gateway'] ?? 'stripe';
+		$payment_token = sanitize_text_field( $_POST['mcf_payment_token'] ?? '' );
+
+		if ( $gateway === 'paypal' ) {
+			return \MetCraft\Core\Payment\Gateway::process_paypal( $config, $amount );
+		}
+
+		// Default Stripe
+		if ( empty( $payment_token ) ) {
+			return [ 'success' => false, 'error' => esc_html__( 'Payment token is required.', 'metcraft' ) ];
+		}
+
+		return \MetCraft\Core\Payment\Gateway::process_stripe( $config, $amount, $payment_token );
 	}
 
 	/**
