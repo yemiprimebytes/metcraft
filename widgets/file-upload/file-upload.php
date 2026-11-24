@@ -5,7 +5,7 @@ use \MetCraft\Widgets\Input_Base;
 
 defined( 'ABSPATH' ) || exit;
 
-class MetCraft_Input_File_Upload extends Input_Base {
+class MetCraft_Input_File_Upload extends MetCraft_Input_Base {
 
 	public function get_name() {
 		return 'mcf-file-upload';

@@ -5,7 +5,7 @@ use \MetCraft\Widgets\Input_Base;
 
 defined( 'ABSPATH' ) || exit;
 
-class MetCraft_Input_Simple_Captcha extends Input_Base {
+class MetCraft_Input_Simple_Captcha extends MetCraft_Input_Base {
 
 	public function get_name() {
 		return 'mcf-simple-captcha';

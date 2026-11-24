@@ -46,5 +46,6 @@ class Controls_Manager {
 	const TYPE_FILE          = 'file';
 	const TYPE_SLIDER        = 'slider';
 	const TYPE_FORMPICKER    = 'formpicker';
+	const FORMPICKER         = 'formpicker';
 
 }

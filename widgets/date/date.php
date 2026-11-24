@@ -5,7 +5,7 @@ use \MetCraft\Widgets\Input_Base;
 
 defined( 'ABSPATH' ) || exit;
 
-class MetCraft_Input_Date extends Input_Base {
+class MetCraft_Input_Date extends MetCraft_Input_Base {
 
 	public function get_name() {
 		return 'mcf-date';

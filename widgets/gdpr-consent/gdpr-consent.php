@@ -5,7 +5,7 @@ use \MetCraft\Widgets\Input_Base;
 
 defined( 'ABSPATH' ) || exit;
 
-class MetCraft_Input_Gdpr_Consent extends Input_Base {
+class MetCraft_Input_Gdpr_Consent extends MetCraft_Input_Base {
 
 	public function get_name() {
 		return 'mcf-gdpr-consent';
