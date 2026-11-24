@@ -1,0 +1,431 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MetCraft 1.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-23 00:00+0000\n"
+"PO-Revision-Date: 2026-11-23 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: MetCraft\n"
+"Plural-Forms: nplurals=2, plural=(n != 1);\n"
+
+msgid "MetCraft"
+msgstr ""
+
+msgid "Forms"
+msgstr ""
+
+msgid "Entries"
+msgstr ""
+
+msgid "Form"
+msgstr ""
+
+msgid "Entry"
+msgstr ""
+
+msgid "Add New"
+msgstr ""
+
+msgid "Add New Form"
+msgstr ""
+
+msgid "Edit Form"
+msgstr ""
+
+msgid "No forms found"
+msgstr ""
+
+msgid "No entries found"
+msgstr ""
+
+msgid "All Forms"
+msgstr ""
+
+msgid "All Entries"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "General Settings"
+msgstr ""
+
+msgid "reCAPTCHA Site Key"
+msgstr ""
+
+msgid "reCAPTCHA Secret Key"
+msgstr ""
+
+msgid "reCAPTCHA Version"
+msgstr ""
+
+msgid "reCAPTCHA v2"
+msgstr ""
+
+msgid "reCAPTCHA v3"
+msgstr ""
+
+msgid "Enter your Google reCAPTCHA site key."
+msgstr ""
+
+msgid "Enter your Google reCAPTCHA secret key."
+msgstr ""
+
+msgid "Configure global settings for MetCraft forms."
+msgstr ""
+
+msgid "Form Settings"
+msgstr ""
+
+msgid "Success Message"
+msgstr ""
+
+msgid "Thank you for your submission!"
+msgstr ""
+
+msgid "Response Type"
+msgstr ""
+
+msgid "Alert"
+msgstr ""
+
+msgid "Inline Message"
+msgstr ""
+
+msgid "Schedule Start Date"
+msgstr ""
+
+msgid "Schedule End Date"
+msgstr ""
+
+msgid "Form Builder"
+msgstr ""
+
+msgid "Create New Form"
+msgstr ""
+
+msgid "MetCraft Form Builder"
+msgstr ""
+
+msgid "Use the Elementor widget to build and edit your forms, or use shortcodes to embed them anywhere."
+msgstr ""
+
+msgid "Select Form"
+msgstr ""
+
+msgid "Select Form:"
+msgstr ""
+
+msgid "Form"
+msgstr ""
+
+msgid "Content"
+msgstr ""
+
+msgid "Style"
+msgstr ""
+
+msgid "Advanced"
+msgstr ""
+
+msgid "Label"
+msgstr ""
+
+msgid "Field Label"
+msgstr ""
+
+msgid "Field Key"
+msgstr ""
+
+msgid "Unique key used to store and identify this field value."
+msgstr ""
+
+msgid "Placeholder"
+msgstr ""
+
+msgid "Required"
+msgstr ""
+
+msgid "Default Value"
+msgstr ""
+
+msgid "Minimum Value"
+msgstr ""
+
+msgid "Maximum Value"
+msgstr ""
+
+msgid "Options"
+msgstr ""
+
+msgid "Option"
+msgstr ""
+
+msgid "Value"
+msgstr ""
+
+msgid "Rows"
+msgstr ""
+
+msgid "Max Rating"
+msgstr ""
+
+msgid "Allowed File Types"
+msgstr ""
+
+msgid "Comma-separated file extensions."
+msgstr ""
+
+msgid "Max File Size (KB)"
+msgstr ""
+
+msgid "Consent Text"
+msgstr ""
+
+msgid "I agree to the terms and conditions"
+msgstr ""
+
+msgid "Button Text"
+msgstr ""
+
+msgid "Submit"
+msgstr ""
+
+msgid "Button Type"
+msgstr ""
+
+msgid "Submit Button"
+msgstr ""
+
+msgid "Reset"
+msgstr ""
+
+msgid "Text"
+msgstr ""
+
+msgid "Email"
+msgstr ""
+
+msgid "Number"
+msgstr ""
+
+msgid "Telephone"
+msgstr ""
+
+msgid "Date"
+msgstr ""
+
+msgid "Time"
+msgstr ""
+
+msgid "Select"
+msgstr ""
+
+msgid "Multi Select"
+msgstr ""
+
+msgid "Textarea"
+msgstr ""
+
+msgid "Checkbox"
+msgstr ""
+
+msgid "Radio"
+msgstr ""
+
+msgid "Switch"
+msgstr ""
+
+msgid "Range Slider"
+msgstr ""
+
+msgid "URL"
+msgstr ""
+
+msgid "Password"
+msgstr ""
+
+msgid "GDPR Consent"
+msgstr ""
+
+msgid "reCAPTCHA"
+msgstr ""
+
+msgid "Simple Captcha"
+msgstr ""
+
+msgid "Simple Message"
+msgstr ""
+
+msgid "Rating"
+msgstr ""
+
+msgid "File Upload"
+msgstr ""
+
+msgid "Summary"
+msgstr ""
+
+msgid "Review Your Submission"
+msgstr ""
+
+msgid "Captcha Verification"
+msgstr ""
+
+msgid "reCAPTCHA Verification"
+msgstr ""
+
+msgid "Review Your Submission"
+msgstr ""
+
+msgid "Submit"
+msgstr ""
+
+msgid "Submitting..."
+msgstr ""
+
+msgid "Submission failed. Please try again."
+msgstr ""
+
+msgid "Form submitted successfully."
+msgstr ""
+
+msgid "Invalid form"
+msgstr ""
+
+msgid "Form not found"
+msgstr ""
+
+msgid "Failed to save submission"
+msgstr ""
+
+msgid "No form selected."
+msgstr ""
+
+msgid "No form found."
+msgstr ""
+
+msgid "This form is not yet available."
+msgstr ""
+
+msgid "This form is no longer accepting submissions."
+msgstr ""
+
+msgid "is required."
+msgstr ""
+
+msgid "Please enter a valid email address."
+msgstr ""
+
+msgid "File type"
+msgstr ""
+
+msgid "is not allowed."
+msgstr ""
+
+msgid "File exceeds the maximum allowed size."
+msgstr ""
+
+msgid "File upload error."
+msgstr ""
+
+msgid "Allowed:"
+msgstr ""
+
+msgid "Max size:"
+msgstr ""
+
+msgid "KB"
+msgstr ""
+
+msgid "Bulk actions"
+msgstr ""
+
+msgid "Move to Trash"
+msgstr ""
+
+msgid "Apply"
+msgstr ""
+
+msgid "Filter"
+msgstr ""
+
+msgid "Search Item"
+msgstr ""
+
+msgid "Update"
+msgstr ""
+
+msgid "Search Forms"
+msgstr ""
+
+msgid "Unauthorized"
+msgstr ""
+
+msgid "Unknown action"
+msgstr ""
+
+msgid "Watch the video tutorial to learn how to use MetCraft."
+msgstr ""
+
+msgid "Edit Form"
+msgstr ""
+
+msgid "We have a standalone Form Builder! You can create and customize forms independently."
+msgstr ""
+
+msgid "New Form Builder"
+msgstr ""
+
+msgid "Join the Community"
+msgstr ""
+
+msgid "Video Tutorials"
+msgstr ""
+
+msgid "Request a feature"
+msgstr ""
+
+msgid "Documentation"
+msgstr ""
+
+msgid "Public Roadmap"
+msgstr ""
+
+msgid "Go Premium"
+msgstr ""
+
+msgid "Minimum length should be "
+msgstr ""
+
+msgid " character long."
+msgstr ""
+
+msgid "Maximum length should be "
+msgstr ""
+
+msgid "Maximum number should be "
+msgstr ""
+
+msgid "Minimum number should be "
+msgstr ""
+
+msgid "MetCraft requires Elementor version %1$s+, which is currently NOT RUNNING."
+msgstr ""
+
+msgid "Update Elementor"
+msgstr ""
+
+msgid "Unleash the Full Potential of Elementor and WordPress!"
+msgstr ""
+
+msgid "Install other plugins from us and take your website to the next level for absolutely free!"
+msgstr ""
+
+msgid "Our Plugins"
+msgstr ""

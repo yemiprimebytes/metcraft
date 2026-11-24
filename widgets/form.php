@@ -1,0 +1,156 @@
+<?php
+namespace Elementor;
+
+use \MetCraft\Controls\Controls_Manager as MetCraft_Controls_Manager;
+
+defined( 'ABSPATH' ) || exit;
+
+class MetCraft_Form extends Widget_Base {
+	use \MetCraft\Widgets\Widget_Notice;
+
+	public function __construct($data = [], $args = null)
+	{
+		parent::__construct($data, $args);
+		$this->add_style_depends('metcraft-ui');
+		$this->add_style_depends('metcraft-style');
+		$this->add_script_depends('htm');
+		$this->add_script_depends('metcraft-app');
+		$this->add_script_depends('mf-widget-frontend');
+	}
+
+	public function get_name() {
+		return 'metcraft';
+    }
+
+	public function get_icon() {
+		return 'mcf-widget-icon icon-metcraft_favicon';
+	}
+
+	public function get_title() {
+		return esc_html__( 'MetCraft', 'metcraft' );
+	}
+
+	public function has_widget_inner_wrapper(): bool {
+		return ! Plugin::$instance->experiments->is_feature_active('e_optimized_markup');
+	}
+
+	public function show_in_panel() {
+        return 'metcraft-form' != get_post_type();
+	}
+
+	public function get_categories() {
+		return [ 'metcraft' ];
+	}
+
+	public function get_keywords() {
+        return ['metcraft', 'form'];
+	}
+
+	protected function register_controls() {
+
+        $this->start_controls_section(
+			'content_section',
+			[
+				'label' => esc_html__( 'Form', 'metcraft' ),
+				'tab' => Controls_Manager::TAB_CONTENT,
+			]
+		);
+
+		$new_builder_url = admin_url( 'admin.php?page=metcraft-builder' );
+
+		$this->add_control(
+            'important_note',
+            [
+                'label' => '',
+                'type' => \Elementor\Controls_Manager::RAW_HTML,
+                'raw' => sprintf(
+                    '<div class="mcf-important-note">%s</div> <button class="mcf-edit-form">' .
+                    '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">' .
+                    '<path d="M10.95 3.07006L11.61 2.41007C12.1568 1.86331 13.0432 1.86331 13.59 2.41007C14.1367 2.95683 14.1367 3.84329 13.59 4.39005L12.93 5.05004M10.95 3.07006L6.51043 7.5096C6.17209 7.848 5.93207 8.27187 5.81602 8.73607L5.33337 10.6667L7.26397 10.184C7.72817 10.068 8.15204 9.82793 8.49044 9.4896L12.93 5.05004M10.95 3.07006L12.93 5.05004" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>' .
+                    '<path d="M12.6666 9.00016C12.6666 11.1918 12.6666 12.2876 12.0613 13.0252C11.9505 13.1602 11.8267 13.284 11.6917 13.3948C10.9541 14.0002 9.85827 14.0002 7.6666 14.0002H7.33333C4.81917 14.0002 3.56211 14.0002 2.78106 13.2191C2.00002 12.4381 2 11.181 2 8.66683V8.3335C2 6.14184 2 5.04602 2.60529 4.30846C2.71611 4.17343 2.83993 4.04961 2.97496 3.93879C3.71253 3.3335 4.80835 3.3335 7 3.3335" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>' .
+                    '</svg> %s </button>' .
+                    '<hr class="mcf-builder-separator">' .
+                    '<div class="mcf-standalone-builder-note">%s</div>' .
+                    '<a href="%s" target="_blank" class="mcf-new-builder-btn">' .
+                    '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">' .
+                    '<rect x="2" y="2.667" width="12" height="10.667" rx="1.5" stroke="white" stroke-width="1.2"/>' .
+                    '<path d="M2 5.667h12M5.333 5.667v7.666M8 8.333h4M8 10.667h2.667" stroke="white" stroke-width="1.2" stroke-linecap="round"/>' .
+                    '</svg> %s </a>',
+                    esc_html__('Watch the video tutorial to learn how to use MetCraft.', 'metcraft'),
+                    esc_url('https://youtu.be/dQw4w9WgXcQ'),
+                    esc_html__('Edit Form', 'metcraft'),
+                    esc_html__('We have a standalone Form Builder! You can create and customize forms independently.', 'metcraft'),
+                    esc_url( $new_builder_url ),
+                    esc_html__('New Form Builder', 'metcraft')
+                ),
+            ]
+        );
+
+        $this->add_control(
+			'mcf_form_id',
+			[
+				'label' => esc_html__( 'Select Form: ', 'metcraft' ),
+				'type' => MetCraft_Controls_Manager::FORMPICKER,
+				'default' => '',
+			]
+		);
+
+		$this->end_controls_section();
+		$this->insert_pro_message();
+	}
+
+	protected function render( $instance = [] ) {
+		$settings = $this->get_settings_for_display();
+		$nav = !isset($settings['mcf_form_multistep_display_nav']) ? '' : ' mcf-form-multistep-nav-'.$settings['mcf_form_multistep_display_nav'];
+		$direction = !isset($settings['mcf_form_multistep_slide_direction']) ? '' : ' mcf_slide_direction_'. $settings['mcf_form_multistep_slide_direction'];
+		$form_data = json_decode($settings['mcf_form_id'], true);
+
+		$message_display_position	= isset($settings['mcf_response_display_position']) ? $settings['mcf_response_display_position'] : 'top';
+		$message_success_icon		= isset($settings['mcf_success_icon']['value']) ? $settings['mcf_success_icon']['value'] : 'fas fa-check';
+		$message_error_icon			= isset($settings['mcf_error_icon']['value']) ? $settings['mcf_error_icon']['value'] : 'fas fa-exclamation-triangle';
+		$message_edit_switch		= isset($settings['mcf_success_controls']) ? $settings['mcf_success_controls'] : false;
+
+		if(is_array($form_data) && isset($form_data['id'])){
+			unset($settings['mcf_form_id']);
+			$template_id = explode('***', (string) $form_data['id']);
+			$template_id = absint($template_id[0]);
+			$form_id     = '';
+
+			if ( $template_id ) {
+				$ffarg = get_posts([
+					'numberposts'	=> 1,
+					'p'         	=> $template_id,
+					'post_type' 	=> 'metcraft-form'
+				]);
+
+				$ffarg = (!empty($ffarg) ? $ffarg : get_posts([
+					'numberposts'	=> 1,
+					'post_type' 	=> 'metcraft-form',
+					'meta_key'		=> '_metcraft_cloned_id',
+					'meta_value'	=> 'template-' . $template_id,
+				]));
+
+				if ( ! empty( $ffarg ) ) {
+					$form_id = $ffarg[0]->ID;
+				}
+			}
+			unset($form_data);
+		}else{
+			$form_id = explode('***', $settings['mcf_form_id']);
+			$form_id = $form_id[0];
+
+			if ( ! is_numeric( $form_id ) || 'metcraft-form' !== get_post_type( absint( $form_id ) ) ) {
+				$form_id = '';
+			} else {
+				$form_id = absint( $form_id );
+			}
+		}
+
+		$response_type = !empty($settings['mcf_response_type']) ? $settings['mcf_response_type'] : 'alert';
+
+		echo '<div id="mcf-response-props-id-'. esc_attr($form_id) .'" data-previous-steps-style="'. (!isset($settings['mcf_form_previous_steps_style']) ? '' : esc_attr($settings['mcf_form_previous_steps_style'])) .'" data-editswitchopen="'. esc_attr($message_edit_switch) .'" data-response_type="'. esc_attr($response_type) .'" data-erroricon="'. esc_attr($message_error_icon)  .'" data-successicon="'. esc_attr($message_success_icon) .'" data-messageposition="'. esc_attr($message_display_position) .'" class=" ' . esc_attr($direction .' '. (!isset($settings['mcf_form_multistep_status']) ? '' : $settings['mcf_form_multistep_status']) . $nav .' mcf-scroll-top-'. ( (!empty($settings['mcf_step_scroll_top']) && 'yes' == $settings['mcf_step_scroll_top']) ? ($settings['mcf_step_scroll_top']) : 'no' )) .'">';
+			\MetCraft\Utils\Util::metcraft_content_renderer(\MetCraft\Controls\Form_Picker_Utils::parse($form_id , $this->get_id()));
+		echo '</div>';
+	}
+
+}

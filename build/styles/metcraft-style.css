@@ -1,0 +1,34 @@
+/* MetCraft Form Styles */
+.mcf-form {
+    font-family: inherit;
+}
+
+.mcf-field-wrapper {
+    animation: mcfFadeIn 0.3s ease;
+}
+
+@keyframes mcfFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.mcf-response-message {
+    animation: mcfSlideDown 0.3s ease;
+}
+
+@keyframes mcfSlideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Multi-column layout support */
+.mcf-form-layout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.mcf-form-column {
+    flex: 1;
+    min-width: 250px;
+}
